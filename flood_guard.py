@@ -138,25 +138,29 @@ class FloodGuard(gl.Contract):
                 "You are verifying a parametric flood insurance claim.\n"
                 f"Covered location: {location}\n"
                 f"Claimed flood date: {event_date}\n"
-                f"Policy threshold: rainfall of at least {threshold} mm "
-                "within 24 hours, or an officially reported flood event "
-                "at the covered location on the claimed date.\n\n"
+                f"Policy threshold: {threshold} mm of rainfall within "
+                "24 hours.\n\n"
                 "Below is the content of an official Indonesian disaster "
                 "/ weather source (a BNPB DIBI report page, or JSON from "
                 "the BMKG public API, where each hourly entry carries "
                 '"tp" = precipitation in mm and "datetime" = its UTC '
-                "timestamp). Decide ONLY from this content:\n"
-                "- APPROVED if the report confirms a flood at the covered "
-                "location on the claimed date, or rainfall at that "
-                "location on that date meeting the threshold.\n"
-                "- REJECTED otherwise (no flood reported there on that "
-                "date, clearly below threshold, or the page does not "
-                "cover that location/date).\n\n"
-                "Report text:\n"
+                "timestamp).\n\n"
+                "Decision rule - apply it mechanically:\n"
+                "- APPROVED if the precipitation figures for the claimed "
+                "date add up to at least the threshold, OR the source "
+                "explicitly reports a flood at the covered location on "
+                "the claimed date.\n"
+                "- REJECTED in every other case.\n"
+                "Your verdict MUST agree with the figures you report: "
+                "if the total meets the threshold, the verdict is "
+                "APPROVED.\n\n"
+                "Source content:\n"
                 + page[:6000]
                 + '\n\nRespond with JSON only: {"verdict": "APPROVED" or '
-                '"REJECTED", "evidence": "the decisive quote or figures '
-                'from the report, at most 300 characters"}'
+                '"REJECTED", "evidence": "ONLY the decisive figures, '
+                "e.g. 'Rainfall 2026-11-25: 1.7 + 0.4 + 1.1 = 3.2 mm, "
+                "threshold 3 mm' - at most 200 characters, no reasoning, "
+                'no commentary"}'
             )
             result = gl.nondet.exec_prompt(prompt, response_format="json")
             if result["verdict"] not in ("APPROVED", "REJECTED"):

@@ -73,9 +73,31 @@ Claim lifecycle: `PENDING` → `APPROVED` / `REJECTED` → `PAID`
 <!-- DEMO-PROOF:BEGIN -->
 - Contract: `flood_guard.py`
 - Network: GenLayer Studio (Studionet)
-- Contract address: _to be filled after deployment_
-- Deploy tx: _to be filled after deployment_
-- Demo policy + claim: _to be filled after the live run_
+- Deployed from (owner): `0x0d1e8B737614bCb563A4BaB329bC257D200B42B4`
+- Contract address: `0xcF5d83Cae518E1908b381b474892Fd00EFC0050F`
+  ([explorer](https://explorer-studio.genlayer.com/address/0xcF5d83Cae518E1908b381b474892Fd00EFC0050F))
+- Deploy tx: `0x2480f79250929d889b2582ce8af3e7e956be92b3d9eb84a2871bdc3da610ecd0` — FINALIZED, 2026-11-25
+
+Demo policy `policy-1` — holder "Yanna", location "Gambir, Jakarta
+Pusat, DKI Jakarta, Indonesia", payout 1000 USDC. The demo trigger is
+2 mm so the full lifecycle can be exercised end-to-end on a light-rain
+day; a production policy would set a flood-scale threshold.
+
+Demo claim `policy-1-claim` — event date 2026-11-25, evidence: the
+BMKG public API response for Gambir
+(`https://api.bmkg.go.id/publik/prakiraan-cuaca?adm4=31.71.01.1001`):
+
+| Step | Tx | Result |
+| --- | --- | --- |
+| `open_policy` | `0x833d7ff73c36b82106f12830136cb80bccbc5b91ebd70f03198837272e787e25` | FINALIZED, policy id `policy-1` |
+| `file_claim` | `0xdb8f498eb12de65a12b8ed0b718325aef4d1af2dc3375900119de2b59bdf12d8` | FINALIZED, claim id `policy-1-claim` |
+| `verify_claim` | `0x6016432ebb06bce1ad380c5b7c68cb3ae63d29aec7f64e16d4fdbf8c446d56d9` | FINALIZED — verdict **APPROVED** |
+| `record_payout` (`demo-payout-001`) | `0x84ecd07ecf05d6b3ff566efb582f1b37c8e71b9525ec7b97f2abf86267ca8c42` | FINALIZED — claim **PAID** |
+
+Verdict evidence recorded on-chain: *"Rainfall data for 2026-11-25
+includes entries with precipitation (tp): 1.7 mm at 15:00 UTC, 0.4 mm
+at 18:00 UTC, and 1.1 mm at 21:00 UTC, exceeding the 2 mm threshold
+within 24 hours."*
 <!-- DEMO-PROOF:END -->
 
 ## Honest limitations
